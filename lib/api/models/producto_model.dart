@@ -8,13 +8,13 @@ String productoToMap(List<Producto> data) =>
 
 class Producto {
   Producto({
-    required this.id,
+    this.id,
     required this.nombre,
     required this.cantidad,
     required this.idContenedor,
   });
 
-  final int id;
+  final int? id;
   final String nombre;
   final int cantidad;
   final int? idContenedor;

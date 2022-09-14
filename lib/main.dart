@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => ProductoBloc()),
         BlocProvider(create: (_) => ContenedorBloc()),
-        BlocProvider(create: (_) => HistorialBloc())
+        BlocProvider(create: (_) => HistorialBloc()),
+        BlocProvider(create: (_) => CreateDialogBloc())
       ],
       child: MaterialApp(
           builder: (context, child) {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
             );
           },
           title: 'Stock App',
-          home: const HomeView()),
+          home: HomeView()),
     );
   }
 }

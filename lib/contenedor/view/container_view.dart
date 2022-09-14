@@ -19,12 +19,11 @@ class ContainerView extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: (state.containers.length / 2).ceil(),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index != 0) index += 1;
                   return _ContainersPage(
                     height: height,
                     cardWidth: cardWidth,
                     containers: state.containers,
-                    index: index,
+                    index: index * 2,
                     cardSelectedId: state.cardSelectedId,
                   );
                 }))));

@@ -18,6 +18,16 @@ class ContenedorBloc extends Bloc<ContenedorEvent, ContenedorState> {
       emit(state.copyWith(cardSelectedId: event.cardSelectedId));
     });
 
+    on<CreateContainerEvent>((event, emit) async {
+      final Map<String, dynamic> newProduct = {
+        "nombre": event.name,
+        "cantidad": 0,
+        "categoria": event.category
+      };
+      await Api.httpPost('/createContainer', newProduct);
+      add(GetAllContenedoresEvent());
+    });
+
     add(GetAllContenedoresEvent());
   }
 }

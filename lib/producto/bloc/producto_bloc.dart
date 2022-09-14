@@ -7,26 +7,29 @@ part 'producto_state.dart';
 
 class ProductoBloc extends Bloc<ProductoEvent, ProductoState> {
   List<Producto> products = [];
+  bool isFiltering = false;
+  String pattern = '';
 
   ProductoBloc() : super(ProductoInitial()) {
     on<GetAllProductosEvent>((event, emit) async {
       final response = await Api.httpGet('/getAllProducts');
-      final List<Producto> products =
-          List<Producto>.from(response.map((x) => Producto.fromMap(x)));
-      this.products = products;
+      _saveProducts(response);
       emit(state.copyWith(products: products));
     });
 
     on<GetProductsByContainerIdEvent>((event, emit) async {
       final response =
           await Api.httpGet('/getProductsByContainerId?id=${event.id}');
-      final List<Producto> products =
-          List<Producto>.from(response.map((x) => Producto.fromMap(x)));
-      this.products = products;
+      _saveProducts(response);
       emit(state.copyWith(products: products));
     });
 
     on<FilterProductsEvent>((event, emit) async {
+      if (event.pattern.isEmpty) {
+        isFiltering = false;
+      }
+      isFiltering = true;
+      pattern = event.pattern;
       final List<Producto> filteredProducts = products
           .where((element) => element.nombre
               .toLowerCase()
@@ -36,6 +39,26 @@ class ProductoBloc extends Bloc<ProductoEvent, ProductoState> {
       emit(state.copyWith(products: filteredProducts));
     });
 
+    on<CreateProductEvent>((event, emit) async {
+      await Api.httpPost(
+          '/createProduct',
+          Producto(
+                  nombre: event.name,
+                  cantidad: event.amount,
+                  idContenedor: event.containerId)
+              .toMap());
+      add(GetAllProductosEvent());
+    });
+
     add(GetAllProductosEvent());
+  }
+
+  _saveProducts(response) {
+    final List<Producto> products =
+        List<Producto>.from(response.map((x) => Producto.fromMap(x)));
+    this.products = products;
+    if (isFiltering) {
+      add(FilterProductsEvent(pattern));
+    }
   }
 }

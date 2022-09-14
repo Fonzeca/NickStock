@@ -17,3 +17,12 @@ class FilterProductsEvent extends ProductoEvent {
 
   FilterProductsEvent(this.pattern);
 }
+
+class CreateProductEvent extends ProductoEvent {
+  final String name;
+  final int amount;
+  final int containerId;
+
+  CreateProductEvent(
+      {required this.name, required this.amount, required this.containerId});
+}
