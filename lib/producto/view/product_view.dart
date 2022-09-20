@@ -10,7 +10,10 @@ class ProductView extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final double cardHeight = (size.width * 15) / 100;
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
+
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController amountController = TextEditingController();
 
     return BlocBuilder<ProductoBloc, ProductoState>(
         builder: ((context, state) => SizedBox(
@@ -18,20 +21,22 @@ class ProductView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    child: _SearchProductsField(controller: _controller),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    child: _SearchProductsField(controller: controller),
                   ),
                   const SizedBox(height: 5),
                   SizedBox(
-                    height: (size.height * 62) / 100,
-                    child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: state.products.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            ProductCard(
+                    height: (state.products.isEmpty) ? cardHeight : (size.height * 62) / 100,
+                    child: (state.products.isEmpty)
+                        ? EmptyProductCard(height: cardHeight)
+                        : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: state.products.length,
+                            itemBuilder: (BuildContext context, int index) => ProductCard(
                                 product: state.products[index],
-                                height: cardHeight)),
+                                height: cardHeight,
+                                nameController: nameController,
+                                amountController: amountController)),
                   ),
                 ],
               ),
@@ -53,14 +58,12 @@ class _SearchProductsField extends StatelessWidget {
     return TextField(
       cursorColor: Colors.indigo,
       controller: _controller,
-      onChanged: ((pattern) => BlocProvider.of<ProductoBloc>(context)
-          .add(FilterProductsEvent(pattern))),
+      onChanged: ((pattern) => BlocProvider.of<ProductoBloc>(context).add(FilterProductsEvent(pattern))),
       decoration: InputDecoration(
         hintStyle: GoogleFonts.roboto(color: Colors.black54),
         enabledBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          borderSide: BorderSide(
-              color: Colors.indigo[200]!, width: 2, style: BorderStyle.solid),
+          borderSide: BorderSide(color: Colors.indigo[200]!, width: 2, style: BorderStyle.solid),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(Radius.circular(10)),

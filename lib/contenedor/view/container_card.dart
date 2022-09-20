@@ -12,11 +12,7 @@ class ContainerCard extends StatelessWidget {
   final double width;
   final int cardSelectedId;
 
-  const ContainerCard(
-      {super.key,
-      required this.container,
-      required this.width,
-      required this.cardSelectedId});
+  const ContainerCard({super.key, required this.container, required this.width, required this.cardSelectedId});
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +20,18 @@ class ContainerCard extends StatelessWidget {
       onTap: (() {
         if (cardSelectedId == container.id) {
           BlocProvider.of<ProductoBloc>(context).add(GetAllProductosEvent());
-          BlocProvider.of<ContenedorBloc>(context)
-              .add(SelectContainerCardEvent(-1));
-          BlocProvider.of<HomeBloc>(context)
-              .add(ChangeProductsTitleEvent('Todos los Productos'));
+          BlocProvider.of<ContenedorBloc>(context).add(SelectContainerCardEvent(-1));
+          BlocProvider.of<HomeBloc>(context).add(ChangeProductsTitleEvent('Todos los Productos'));
           return;
         }
 
-        BlocProvider.of<HomeBloc>(context)
-            .add(ChangeProductsTitleEvent('Productos en ${container.nombre}'));
-        BlocProvider.of<ProductoBloc>(context)
-            .add(GetProductsByContainerIdEvent(container.id));
-        BlocProvider.of<ContenedorBloc>(context)
-            .add(SelectContainerCardEvent(container.id));
+        BlocProvider.of<HomeBloc>(context).add(ChangeProductsTitleEvent('Productos en ${container.nombre}'));
+        BlocProvider.of<ProductoBloc>(context).add(GetProductsByContainerIdEvent(container.id));
+        BlocProvider.of<ContenedorBloc>(context).add(SelectContainerCardEvent(container.id));
       }),
       child: Card(
         shape: cardSelectedId == container.id
-            ? RoundedRectangleBorder(
-                side: BorderSide(color: Colors.indigo[100]!, width: 2),
-                borderRadius: const BorderRadius.all(Radius.circular(5)))
+            ? RoundedRectangleBorder(side: BorderSide(color: Colors.indigo[100]!, width: 2), borderRadius: const BorderRadius.all(Radius.circular(5)))
             : null,
         elevation: 2,
         margin: const EdgeInsets.only(top: 32, bottom: 10),
@@ -50,45 +39,42 @@ class ContainerCard extends StatelessWidget {
         child: Container(
           width: width,
           padding: const EdgeInsets.all(10),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  container.nombre,
-                  style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                      color: Colors.black54),
-                ),
-                const SizedBox(height: 35),
-                Container(
-                  alignment: Alignment.bottomLeft,
-                  child: Column(
-                    children: [
-                      CustomDetails(
-                        label: "Categoría",
-                        labelValue: container.categoria,
-                        icon: Icon(
-                          Icons.category_outlined,
-                          size: 30,
-                          color: Colors.indigo[200],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      CustomDetails(
-                        label: "Cantidad",
-                        labelValue: '${container.cantidad}',
-                        icon: Icon(
-                          Icons.inventory_2_outlined,
-                          size: 30,
-                          color: Colors.indigo[200],
-                        ),
-                      ),
-                    ],
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
+            Text(
+              container.nombre,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.fade,
+              style: GoogleFonts.roboto(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.black54),
+            ),
+            const SizedBox(height: 35),
+            Container(
+              alignment: Alignment.bottomLeft,
+              child: Column(
+                children: [
+                  CustomDetails(
+                    label: "Categoría",
+                    labelValue: container.categoria,
+                    icon: Icon(
+                      Icons.category_outlined,
+                      size: 30,
+                      color: Colors.indigo[200],
+                    ),
                   ),
-                ),
-              ]),
+                  const SizedBox(height: 10),
+                  CustomDetails(
+                    label: "Cantidad",
+                    labelValue: '${container.cantidad}',
+                    icon: Icon(
+                      Icons.inventory_2_outlined,
+                      size: 30,
+                      color: Colors.indigo[200],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
         ),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stock_app/api/models/models.dart';
 import 'package:stock_app/contenedor/contenedor.dart';
 
 class ContainerView extends StatelessWidget {
@@ -15,25 +14,29 @@ class ContainerView extends StatelessWidget {
     return BlocBuilder<ContenedorBloc, ContenedorState>(
         builder: ((context, state) => SizedBox(
             height: height,
-            child: PageView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: (state.containers.length / 2).ceil(),
-                itemBuilder: (BuildContext context, int index) {
-                  return _ContainersPage(
-                    height: height,
-                    cardWidth: cardWidth,
-                    containers: state.containers,
-                    index: index * 2,
-                    cardSelectedId: state.cardSelectedId,
-                  );
-                }))));
+            child: (state.containers.isEmpty)
+                ? EmptyContainerCard(
+                    width: cardWidth,
+                  )
+                : PageView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: (state.containers.length / 2).ceil(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return _ContainersPage(
+                        height: height,
+                        cardWidth: cardWidth,
+                        containers: state.containers,
+                        index: index * 2,
+                        cardSelectedId: state.cardSelectedId,
+                      );
+                    }))));
   }
 }
 
 class _ContainersPage extends StatelessWidget {
   final double height;
   final double cardWidth;
-  final List<Contenedor> containers;
+  final List<dynamic> containers;
   final int index;
   final int cardSelectedId;
 
@@ -57,11 +60,7 @@ class _ContainersPage extends StatelessWidget {
           cardSelectedId: cardSelectedId,
         ),
         SizedBox(height: height, width: 10),
-        if (index + 1 < containers.length)
-          ContainerCard(
-              container: containers[index + 1],
-              width: cardWidth,
-              cardSelectedId: cardSelectedId),
+        if (index + 1 < containers.length) ContainerCard(container: containers[index + 1], width: cardWidth, cardSelectedId: cardSelectedId),
       ],
     );
   }

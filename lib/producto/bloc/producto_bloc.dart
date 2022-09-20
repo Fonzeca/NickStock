@@ -18,8 +18,7 @@ class ProductoBloc extends Bloc<ProductoEvent, ProductoState> {
     });
 
     on<GetProductsByContainerIdEvent>((event, emit) async {
-      final response =
-          await Api.httpGet('/getProductsByContainerId?id=${event.id}');
+      final response = await Api.httpGet('/getProductsByContainerId?id=${event.id}');
       _saveProducts(response);
       emit(state.copyWith(products: products));
     });
@@ -30,23 +29,29 @@ class ProductoBloc extends Bloc<ProductoEvent, ProductoState> {
       }
       isFiltering = true;
       pattern = event.pattern;
-      final List<Producto> filteredProducts = products
-          .where((element) => element.nombre
-              .toLowerCase()
-              .contains(event.pattern.toLowerCase()))
-          .toList();
+      final List<Producto> filteredProducts =
+          products.where((element) => element.nombre.toLowerCase().contains(event.pattern.toLowerCase())).toList();
 
       emit(state.copyWith(products: filteredProducts));
     });
 
     on<CreateProductEvent>((event, emit) async {
-      await Api.httpPost(
-          '/createProduct',
-          Producto(
-                  nombre: event.name,
-                  cantidad: event.amount,
-                  idContenedor: event.containerId)
-              .toMap());
+      await Api.httpPost('/createProduct', Producto(nombre: event.name, cantidad: event.amount, idContenedor: event.containerId).toMap());
+      add(GetAllProductosEvent());
+    });
+
+    on<DeleteProductEvent>((event, emit) async {
+      await Api.httpDelete('/deleteProductById?id=${event.id}');
+      add(GetAllProductosEvent());
+    });
+
+    on<AddProductStockById>((event, emit) async {
+      await Api.httpPut('/addProductStockById?id=${event.id}&amount=${event.amount}');
+      add(GetAllProductosEvent());
+    });
+
+    on<RemoveProductStockById>((event, emit) async {
+      await Api.httpPut('/removeProductStockById?id=${event.id}&amount=${event.amount}');
       add(GetAllProductosEvent());
     });
 
@@ -54,8 +59,7 @@ class ProductoBloc extends Bloc<ProductoEvent, ProductoState> {
   }
 
   _saveProducts(response) {
-    final List<Producto> products =
-        List<Producto>.from(response.map((x) => Producto.fromMap(x)));
+    final List<Producto> products = List<Producto>.from(response.map((x) => Producto.fromMap(x)));
     this.products = products;
     if (isFiltering) {
       add(FilterProductsEvent(pattern));

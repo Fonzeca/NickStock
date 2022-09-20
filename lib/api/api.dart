@@ -27,7 +27,7 @@ class Api {
     }
   }
 
-  static Future httpPut(String path, Map<String, dynamic> data) async {
+  static Future httpPut(String path, {dynamic data}) async {
     try {
       final resp = await _dio.put(path, data: data);
       return resp.data;

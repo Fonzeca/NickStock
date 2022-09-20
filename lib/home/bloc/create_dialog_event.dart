@@ -3,9 +3,9 @@ part of 'create_dialog_bloc.dart';
 abstract class CreateDialogEvent {}
 
 class ChangeDialogTabEvent extends CreateDialogEvent {
-  final bool isProductTabSelected;
+  final bool isFirstTabSelected;
 
-  ChangeDialogTabEvent({required this.isProductTabSelected});
+  ChangeDialogTabEvent({required this.isFirstTabSelected});
 }
 
 class ChangeAmountInputErrorEvent extends CreateDialogEvent {

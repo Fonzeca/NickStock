@@ -23,6 +23,25 @@ class CreateProductEvent extends ProductoEvent {
   final int amount;
   final int containerId;
 
-  CreateProductEvent(
-      {required this.name, required this.amount, required this.containerId});
+  CreateProductEvent({required this.name, required this.amount, required this.containerId});
+}
+
+class DeleteProductEvent extends ProductoEvent {
+  final int id;
+
+  DeleteProductEvent(this.id);
+}
+
+class AddProductStockById extends ProductoEvent {
+  final int id;
+  final int amount;
+
+  AddProductStockById({required this.id, required this.amount});
+}
+
+class RemoveProductStockById extends ProductoEvent {
+  final int id;
+  final int amount;
+
+  RemoveProductStockById({required this.id, required this.amount});
 }

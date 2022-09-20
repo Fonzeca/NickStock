@@ -6,7 +6,7 @@ part 'create_dialog_state.dart';
 class CreateDialogBloc extends Bloc<CreateDialogEvent, CreateDialogState> {
   CreateDialogBloc() : super(CreateDialogInitialState()) {
     on<ChangeDialogTabEvent>(((event, emit) {
-      emit(state.copyWith(isProductTabSelected: event.isProductTabSelected));
+      emit(state.copyWith(isFirstTabSelected: event.isFirstTabSelected));
     }));
 
     on<ChangeAmountInputErrorEvent>(((event, emit) {
