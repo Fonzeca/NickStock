@@ -4,9 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class EmptyProductCard extends StatelessWidget {
   final double height;
 
-  final TextEditingController controller = TextEditingController();
-
-  EmptyProductCard({super.key, required this.height});
+  const EmptyProductCard({super.key, required this.height});
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_app/api/models/models.dart';
 import 'package:stock_app/contenedor/contenedor.dart';
+import 'package:stock_app/historial/historial.dart';
 import 'package:stock_app/home/home.dart';
 import 'package:stock_app/producto/producto.dart';
 import 'package:stock_app/widgets/widgets.dart';
@@ -18,16 +19,30 @@ class ContainerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (() {
+        final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+        final HistorialBloc historialBloc = BlocProvider.of<HistorialBloc>(context);
+        final ProductoBloc productoBloc = BlocProvider.of<ProductoBloc>(context);
+
         if (cardSelectedId == container.id) {
-          BlocProvider.of<ProductoBloc>(context).add(GetAllProductosEvent());
           BlocProvider.of<ContenedorBloc>(context).add(SelectContainerCardEvent(-1));
-          BlocProvider.of<HomeBloc>(context).add(ChangeProductsTitleEvent('Todos los Productos'));
+          if (homeBloc.state.isInHistory) {
+            homeBloc.add(ChangeTitleEvent('Todo el Historial'));
+            historialBloc.add(GetAllHistorialesEvent());
+          } else {
+            homeBloc.add(ChangeTitleEvent('Todos los Productos'));
+            productoBloc.add(GetAllProductosEvent());
+          }
           return;
         }
 
-        BlocProvider.of<HomeBloc>(context).add(ChangeProductsTitleEvent('Productos en ${container.nombre}'));
-        BlocProvider.of<ProductoBloc>(context).add(GetProductsByContainerIdEvent(container.id));
         BlocProvider.of<ContenedorBloc>(context).add(SelectContainerCardEvent(container.id));
+        if (homeBloc.state.isInHistory) {
+          homeBloc.add(ChangeTitleEvent('Historial de ${container.nombre}'));
+          historialBloc.add(GetHistoryByContainerIdEvent(container.id));
+        } else {
+          homeBloc.add(ChangeTitleEvent('Productos en ${container.nombre}'));
+          productoBloc.add(GetProductsByContainerIdEvent(container.id));
+        }
       }),
       child: Card(
         shape: cardSelectedId == container.id
@@ -56,7 +71,7 @@ class ContainerCard extends StatelessWidget {
                     label: "Categoría",
                     labelValue: container.categoria,
                     icon: Icon(
-                      Icons.category_outlined,
+                      Icons.tag,
                       size: 30,
                       color: Colors.indigo[200],
                     ),

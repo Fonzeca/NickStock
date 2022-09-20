@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_app/api/models/models.dart';
 import 'package:stock_app/contenedor/contenedor.dart';
+import 'package:stock_app/historial/historial.dart';
 import 'package:stock_app/home/home.dart';
 import 'package:stock_app/producto/producto.dart';
 import 'package:stock_app/widgets/widgets.dart';
@@ -21,7 +22,7 @@ class HomeView extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [const ContainerView(), _ProductsTitle(productsTitle: state.productsTitle), const ProductView()],
+            children: [const ContainerView(), _ProductsTitle(state: state), if (state.isInHistory) const HistoryView() else const ProductView()],
           ),
         ),
         floatingActionButton: CircleAvatar(
@@ -34,11 +35,11 @@ class HomeView extends StatelessWidget {
 }
 
 class _ProductsTitle extends StatelessWidget {
-  final String productsTitle;
+  final HomeState state;
 
   const _ProductsTitle({
     Key? key,
-    required this.productsTitle,
+    required this.state,
   }) : super(key: key);
 
   @override
@@ -52,8 +53,38 @@ class _ProductsTitle extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.only(left: 10, right: 10),
-      child: Text(productsTitle,
-          softWrap: false, overflow: TextOverflow.fade, style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.black54)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(child: Container()),
+          Text(state.title,
+              softWrap: false,
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.black54)),
+          Expanded(
+              child: Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+                onPressed: () {
+                  final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+                  if (state.isInHistory) {
+                    homeBloc.add(ChangeTitleEvent("Todos los Productos"));
+                    homeBloc.add(ChangeToHistoryEvent(false));
+                    BlocProvider.of<ProductoBloc>(context).add(GetAllProductosEvent());
+                  } else {
+                    homeBloc.add(ChangeTitleEvent("Todo el Historial"));
+                    homeBloc.add(ChangeToHistoryEvent(true));
+                    BlocProvider.of<HistorialBloc>(context).add(GetAllHistorialesEvent());
+                  }
+                },
+                icon: Icon(
+                  state.isInHistory ? Icons.category_outlined : Icons.history,
+                  color: Colors.indigo[300],
+                )),
+          ))
+        ],
+      ),
     );
   }
 }

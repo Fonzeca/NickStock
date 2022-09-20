@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 
 class Api {
-  static Dio _dio = Dio();
+  static final Dio _dio = Dio();
 
   static void configureDio() {
-    _dio.options.baseUrl = 'http://192.168.1.3:4747';
+    _dio.options.baseUrl = 'http://192.168.1.41:4747';
 
     _dio.options.headers = {"Content-Type": "application/json"};
   }

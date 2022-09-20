@@ -1,15 +1,16 @@
 part of 'home_bloc.dart';
 
 class HomeState {
-  final String productsTitle;
+  final String title;
+  final bool isInHistory;
 
-  HomeState({required this.productsTitle});
+  HomeState({required this.title, required this.isInHistory});
 
-  HomeState copyWith({String? productsTitle}) {
-    return HomeState(productsTitle: productsTitle ?? this.productsTitle);
+  HomeState copyWith({String? title, bool? isInHistory}) {
+    return HomeState(title: title ?? this.title, isInHistory: isInHistory ?? this.isInHistory);
   }
 }
 
 class HomeInitialState extends HomeState {
-  HomeInitialState() : super(productsTitle: 'Todos los Productos');
+  HomeInitialState() : super(title: 'Todos los Productos', isInHistory: false);
 }

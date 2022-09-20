@@ -66,19 +66,24 @@ class ProductCard extends StatelessWidget {
                                 return;
                               }
 
-                              if (state.isFirstTabSelected)
+                              if (state.isFirstTabSelected) {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                  content: Text('Cantidad añadida'),
+                                  backgroundColor: Colors.indigo,
+                                ));
+
                                 BlocProvider.of<ProductoBloc>(context).add(AddProductStockById(id: product.id!, amount: parsedAmount));
-                              else
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                  content: Text('Cantidad removida'),
+                                  backgroundColor: Colors.red,
+                                ));
                                 BlocProvider.of<ProductoBloc>(context).add(RemoveProductStockById(id: product.id!, amount: parsedAmount));
+                              }
 
                               await BlocProvider.of<ProductoBloc>(context).stream.first;
 
                               BlocProvider.of<ContenedorBloc>(context).add(GetAllContenedoresEvent());
-
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                content: Text('Cantidad añadida'),
-                                backgroundColor: Colors.indigo,
-                              ));
 
                               amountController.clear();
                               nameController.clear();
