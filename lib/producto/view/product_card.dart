@@ -19,6 +19,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Slidable(
       key: Key(product.id.toString()),
       endActionPane: ActionPane(
@@ -130,7 +132,7 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.topLeft,
-                    width: 130,
+                    width: size.width * 0.3,
                     child: Text(
                       product.nombre,
                       style: GoogleFonts.roboto(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black54),
@@ -138,17 +140,19 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 22),
                   CustomDetails(
+                      containerWidth: size.width * 0.20,
                       label: "Contenedor",
-                      labelValue: product.nombreContenedor ?? '',
+                      labelValue: product.nombreContenedor ?? 'N/A',
                       icon: const Icon(
                         Icons.business_center_outlined,
                         color: Colors.black38,
                         size: 30,
                       )),
                   const SizedBox(
-                    width: 20,
+                    width: 10,
                   ),
                   CustomDetails(
+                      containerWidth: size.width * 0.20,
                       label: "Cantidad",
                       labelValue: product.cantidad.toString(),
                       icon: const Icon(

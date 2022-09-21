@@ -4,7 +4,7 @@ class Api {
   static final Dio _dio = Dio();
 
   static void configureDio() {
-    _dio.options.baseUrl = 'http://192.168.1.41:4747';
+    _dio.options.baseUrl = 'http://192.168.1.38:4747';
 
     _dio.options.headers = {"Content-Type": "application/json"};
   }

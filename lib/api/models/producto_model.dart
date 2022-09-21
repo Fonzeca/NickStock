@@ -18,7 +18,7 @@ class Producto {
         nombre: json["nombre"],
         cantidad: json["cantidad"],
         idContenedor: json["id_contenedor"],
-        nombreContenedor: json["nombreContenedor"],
+        nombreContenedor: json["nombre_contenedor"],
       );
 
   Map<String, dynamic> toMap() => {
